@@ -1,7 +1,10 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameLineEto.Common.Mac", "FrameLineEto.Common\FrameLineEto.Common.Mac.csproj", "{E7F41199-1C5A-47BF-9AFA-68AD094247F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameLineEto.Common.Win", "FrameLineEto.Common\FrameLineEto.Common.Win.csproj", "{555B44D8-DE99-4162-B6B5-28C318438FB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +16,15 @@ Global
 		{E7F41199-1C5A-47BF-9AFA-68AD094247F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7F41199-1C5A-47BF-9AFA-68AD094247F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7F41199-1C5A-47BF-9AFA-68AD094247F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{555B44D8-DE99-4162-B6B5-28C318438FB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{555B44D8-DE99-4162-B6B5-28C318438FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{555B44D8-DE99-4162-B6B5-28C318438FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{555B44D8-DE99-4162-B6B5-28C318438FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F79D2931-B124-4D9E-8F19-841DC75D6B8D}
 	EndGlobalSection
 EndGlobal
