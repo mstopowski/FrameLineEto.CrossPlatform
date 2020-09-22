@@ -15,4 +15,7 @@
     <Folder Include="Commands\" />
     <Folder Include="Views\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Methods\FrameLineCommonCommand.cs" />
+  </ItemGroup>
 </Project>
