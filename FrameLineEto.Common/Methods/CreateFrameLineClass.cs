@@ -10,7 +10,10 @@ namespace FrameLineEto.Common.Methods
     {
         public RhinoList<Spacing> spacings = new RhinoList<Spacing>();
 
-        public CreateFrameLineClass() { }
+        public CreateFrameLineClass(RhinoList<Spacing> _spacings)
+        {
+            spacings = _spacings;
+        }
 
         public void AddFrameLineToDoc()
         {
