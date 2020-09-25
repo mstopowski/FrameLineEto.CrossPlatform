@@ -1,8 +1,6 @@
 using System;
 using Rhino.Commands;
-using Rhino.Collections;
 using Rhino.UI;
-using FrameLineEto.Common.Methods;
 
 namespace FrameLineEto.Common.Commands
 {

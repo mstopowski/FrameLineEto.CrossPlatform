@@ -2,8 +2,13 @@
 using Eto.Forms;
 using System;
 using Rhino.Collections;
+using Rhino.DocObjects;
+using Rhino.Geometry;
+using Rhino.Display;
 using FrameLineEto.Common.Methods;
 using FrameLineEto.Common.Commands;
+using System.Data;
+using System.Linq;
 
 namespace FrameLineEto.Common.Views
 {
@@ -18,177 +23,360 @@ namespace FrameLineEto.Common.Views
             ShowInTaskbar = true;
             Title = GetType().Name;
             WindowStyle = WindowStyle.Default;
-            RhinoList<TextBox> main_text = new RhinoList<TextBox>();
-            RhinoList<TextBox> mod1_text = new RhinoList<TextBox>();
-            RhinoList<TextBox> mod2_text = new RhinoList<TextBox>();
-            RhinoList<TextBox> mod3_text = new RhinoList<TextBox>();
-            
-            #region Main Frame Line
-            var from_label = new Label
+            var _width = 65;
+            RhinoList<TextBox> main_texts = new RhinoList<TextBox>();
+            RhinoList<TextBox> mod1_texts = new RhinoList<TextBox>();
+            RhinoList<TextBox> mod2_texts = new RhinoList<TextBox>();
+            RhinoList<TextBox> mod3_texts = new RhinoList<TextBox>();
+
+            #region Frame line
+            var fromTextBox = new TextBox
             {
-                Text = "From",
-                TextAlignment = TextAlignment.Left,
+                ToolTip = "Type starting frame of frame line.",
+                Width = _width,
             };
-
-            var to_label = new Label
+            main_texts.Add(fromTextBox);
+            var toTextBox = new TextBox
             {
-                Text = "To",
-                TextAlignment = TextAlignment.Left,
+                ToolTip = "Type end frame of frame line.",
+                Width = _width,
             };
-
-            var spacing_label = new Label
+            main_texts.Add(toTextBox);
+            var spacingTextBox = new TextBox
             {
-                Text = "Spacing",
-                TextAlignment = TextAlignment.Left,
+                ToolTip = "Type typical spacing of frame line.",
+                Width = _width,
             };
-
-            var from_text = new TextBox();
-            main_text.Add(from_text);
-
-            var to_text = new TextBox();
-
-            var spacing_text = new TextBox();
-            main_text.Add(spacing_text);
-
-            var gruoup_main = new GroupBox
-            {
-                Text = "Main frame line",
-                Padding = new Padding(5, 10, 5, 5),
-                Content = new TableLayout
-                {
-                    Rows =
-                    {
-                        new TableRow(null, from_label, to_label, spacing_label),
-                        new TableRow(null, from_text, to_text, spacing_text),
-                    }
-                },
-
-            };
+            main_texts.Add(spacingTextBox);
             #endregion
 
-            #region Modifications
-            var from_mod_label = new Label
+            #region Frame line modification #1
+            var fromTextBox_1 = new TextBox
             {
-                Text = "From",
-                TextAlignment = TextAlignment.Left,
+                ToolTip = "Type starting frame of modification.",
+                Width = _width,
             };
-
-            var to_mod_label = new Label
+            mod1_texts.Add(fromTextBox_1);
+            var toTextBox_1 = new TextBox
             {
-                Text = "To",
-                TextAlignment = TextAlignment.Left,
+                ToolTip = "Type end frame of modification.",
+                Width = _width,
             };
-
-            var spacing_mod_label = new Label
+            mod1_texts.Add(toTextBox_1);
+            var spacingTextBox_1 = new TextBox
             {
-                Text = "Spacing",
-                TextAlignment = TextAlignment.Left,
+                ToolTip = "Type spacing of modification.",
+                Width = _width,
             };
+            mod1_texts.Add(spacingTextBox_1);
+            #endregion
 
-            var mod_1 = new Label
+            #region Frame line modification #2
+            var fromTextBox_2 = new TextBox
             {
-                Text = "#1",
-                TextAlignment = TextAlignment.Center,
+                ToolTip = "Type starting frame of modification.",
+                Width = _width,
             };
-
-            var mod_2 = new Label
+            mod2_texts.Add(fromTextBox_2);
+            var toTextBox_2 = new TextBox
             {
-                Text = "#2",
-                TextAlignment = TextAlignment.Center,
+                ToolTip = "Type end frame of modification.",
+                Width = _width,
             };
-
-            var mod_3 = new Label
+            mod2_texts.Add(toTextBox_2);
+            var spacingTextBox_2 = new TextBox
             {
-                Text = "#3",
-                TextAlignment = TextAlignment.Center,
+                ToolTip = "Type spacing of modification.",
+                Width = _width,
             };
+            mod2_texts.Add(spacingTextBox_2);
+            #endregion
 
-            var mod_1_from_text = new TextBox();
-            mod1_text.Add(mod_1_from_text);
-
-            var mod_1_to_text = new TextBox();
-            mod1_text.Add(mod_1_to_text);
-
-            var mod_1_spac_text = new TextBox();
-            mod1_text.Add(mod_1_spac_text);
-
-            var mod_2_from_text = new TextBox();
-            mod2_text.Add(mod_2_from_text);
-
-            var mod_2_to_text = new TextBox();
-            mod2_text.Add(mod_2_to_text);
-
-            var mod_2_spac_text = new TextBox();
-            mod2_text.Add(mod_2_spac_text);
-
-            var mod_3_from_text = new TextBox();
-            mod3_text.Add(mod_3_from_text);
-
-            var mod_3_to_text = new TextBox();
-            mod3_text.Add(mod_3_to_text);
-
-            var mod_3_spac_text = new TextBox();
-            mod3_text.Add(mod_3_spac_text);
-
-            var group_mod = new GroupBox
+            #region Frame line modification #3
+            var fromTextBox_3 = new TextBox
             {
-                Text = "Frame line modifications",
-                Padding = new Padding(5, 10, 5, 5),
-                Content = new TableLayout
-                {
-                    Rows =
-                    {
-                        new TableRow(null, from_mod_label, to_mod_label, spacing_mod_label),
-                        new TableRow(mod_1, mod_1_from_text, mod_1_to_text, mod_1_spac_text),
-                        new TableRow(mod_2, mod_2_from_text, mod_2_to_text, mod_2_spac_text),
-                        new TableRow(mod_3, mod_3_from_text, mod_3_to_text, mod_3_spac_text),
-                    }
-                },
+                ToolTip = "Type starting frame of modification.",
+                Width = _width,
             };
+            mod3_texts.Add(fromTextBox_2);
+            var toTextBox_3 = new TextBox
+            {
+                ToolTip = "Type end frame of modification.",
+                Width = _width,
+            };
+            mod3_texts.Add(toTextBox_2);
+            var spacingTextBox_3 = new TextBox
+            {
+                ToolTip = "Type spacing of modification.",
+                Width = _width,
+            };
+            mod3_texts.Add(spacingTextBox_3);
             #endregion
 
             #region Buttons
+            var clear_button = new Button { Text = "Clear" };
+            clear_button.Click += (sender, e) => ClearMainParam(main_texts);
+            var clear_mod_button = new Button { Text = "Clear" };
+            clear_button.Click += (sender, e) => ClearMainParam(mod1_texts);
+
             var hello_button = new Button { Text = "Create" };
-            hello_button.Click += (sender, e) => CreateFrameLine(this, main_text, mod1_text, mod2_text, mod3_text);
+            hello_button.Click += (sender, e) => CreateFrameLine(main_texts, mod1_texts, mod2_texts, mod3_texts);
 
             var close_button = new Button { Text = "Cancel" };
             close_button.Click += (sender, e) => Close();
-
-            var button_layout = new TableLayout
-            {
-                Padding = new Padding(5, 10, 5, 5),
-                Spacing = new Size(5, 5),
-                Rows = { new TableRow(null, hello_button, null, close_button, null) }
-            };
-
             #endregion
 
-            Content = new TableLayout
+            #region
+            var layout = new TableLayout
             {
-                Padding = new Padding(5),
                 Spacing = new Size(5, 5),
+                Padding = new Padding(10),
+                
                 Rows =
                 {
-                    new TableRow(gruoup_main),
-                    new TableRow(group_mod),
-                    new TableRow(button_layout),
-                }
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
+                            new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
+                            new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
+                        }
+                    },
+
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            new TableCell(fromTextBox),
+                            new TableCell(toTextBox),
+                            new TableCell(spacingTextBox),
+                        },
+                    },
+
+                    null,
+
+                    new TableRow(null, null, clear_button),
+
+                    null,
+
+                    new TableRow(new Label{ Text = "Modifications"}),
+
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
+                            new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
+                            new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
+                        }
+                    },
+
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            new TableCell(fromTextBox_1),
+                            new TableCell(toTextBox_1),
+                            new TableCell(spacingTextBox_1),
+                        },
+                    },
+
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            new TableCell(fromTextBox_2),
+                            new TableCell(toTextBox_2),
+                            new TableCell(spacingTextBox_2),
+                        },
+                    },
+
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            new TableCell(fromTextBox_3),
+                            new TableCell(toTextBox_3),
+                            new TableCell(spacingTextBox_3),
+                        },
+                    },
+
+                    null,
+
+                    new TableRow(null, null, clear_mod_button),
+
+                    null,
+
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            null,
+                            new TableCell(hello_button),
+                            new TableCell(close_button),
+                        },
+                    }
+                },
             };
+            #endregion
+
+            Content = layout;
         }
 
-        public void CreateFrameLine(FrameLineEtoModelessForm aaa, RhinoList<TextBox> main, RhinoList<TextBox> mod1, RhinoList<TextBox> mod2, RhinoList<TextBox> mod3)
+        public void CreateFrameLine(RhinoList<TextBox> texts, RhinoList<TextBox> texts_mod1, RhinoList<TextBox> texts_mod2, RhinoList<TextBox> texts_mod3)
         {
-
-            
-        }
-
-        public bool CheckInputValidity(RhinoList<TextBox> list)
-        {
-            if (true)
+            RhinoList<Spacing> spacings = new RhinoList<Spacing>();
+            if (!CheckList(texts))
             {
+                return;
+            }
+            Rhino.RhinoApp.WriteLine("xx");
+            GetParams(texts, ref spacings);
+            if (CheckList(texts_mod1)) GetParams(texts_mod1, ref spacings);
+            if (CheckList(texts_mod2)) GetParams(texts_mod2, ref spacings);
+            if (CheckList(texts_mod3)) GetParams(texts_mod3, ref spacings);
 
+            // Create object of Class FrameLine with spacings as input
+            FrameLine frameLine = new FrameLine(spacings);
+
+            var doc = Rhino.RhinoDoc.ActiveDoc;
+            // Backup of current layer
+            var layerBackUp = doc.Layers.CurrentLayer;
+
+            //Creating layer for frameline
+            Layer flineLayer = new Layer();
+            flineLayer.Name = "FRAME LINE";
+            doc.Layers.Add(flineLayer);
+            doc.Layers.SetCurrentLayerIndex(doc.Layers.FindName(flineLayer.Name).Index, true);
+
+            // Creating layer for labels (child of frameline)
+            Layer labelLayer = new Layer();
+            labelLayer.Name = "LABELS";
+            labelLayer.ParentLayerId = doc.Layers.FindIndex(doc.Layers.FindName(flineLayer.Name).Index).Id;
+            doc.Layers.Add(labelLayer);
+
+            // Grupowanie
+            var groupName = "FRAME LINE GROUP";
+            if (doc.Groups.Count == 0 || doc.Groups.FindName(groupName) == null)
+            {
+                doc.Groups.Add(groupName);
+            }
+            if (doc.Groups.FindName(groupName) != null)
+            {
+                var oldFrameLine = doc.Objects.FindByGroup(doc.Groups.FindName(groupName).Index);
+                foreach (var element in oldFrameLine)
+                {
+                    doc.Objects.Delete(element);
+                }
+            }
+
+            int frameHeight = 400; // Vertical lines height
+
+            CreateCrossLines(doc, frameLine, groupName, frameHeight);
+
+            doc.Layers.SetCurrentLayerIndex(doc.Layers.FindName(labelLayer.Name).Index, true);
+
+            AddLabels(doc, frameLine, groupName, frameHeight);
+
+            // Adding polyline to document
+            doc.Layers.SetCurrentLayerIndex(doc.Layers.FindName(flineLayer.Name).Index, true);
+            var polyID = doc.Objects.AddPolyline(frameLine.polyPoints);
+            doc.Groups.AddToGroup(doc.Groups.FindName(groupName).Index, polyID);
+
+            // Redrawing views
+            doc.Views.Redraw();
+
+            // Restoring previous layer and locking frameline layer
+            doc.Layers.SetCurrentLayerIndex(layerBackUp.Index, true);
+            doc.Layers.FindIndex(doc.Layers.FindName(labelLayer.Name).Index).IsLocked = true;
+            doc.Layers.FindIndex(doc.Layers.FindName(flineLayer.Name).Index).IsLocked = true;
+
+            return;
+        }
+
+        void GetParams(RhinoList<TextBox> texts, ref RhinoList<Spacing> spacingList)
+        {
+            Spacing spacing = new Spacing(int.Parse(texts[0].Text),int.Parse(texts[1].Text),int.Parse(texts[2].Text));
+            spacingList.Add(spacing);
+        }
+
+        void ClearMainParam(RhinoList<TextBox> texts)
+        {
+            ClearTextBoxes(texts);
+        }
+
+        void ClearModParam(RhinoList<TextBox> texts)
+        {
+            ClearTextBoxes(texts);
+        }
+
+        void ClearTextBoxes(RhinoList<TextBox> textBoxes)
+        {
+            foreach (var textbox in textBoxes)
+            {
+                textbox.Text = "";
+            }
+        }
+
+        bool CheckList(RhinoList<TextBox> texts)
+        {
+            foreach (var text in texts)
+            {
+                if(text.Text == "")
+                {
+                    return false;
+                }
             }
             return true;
+        }
+
+        void CreateCrossLines(Rhino.RhinoDoc doc, FrameLine frameLine, string groupName, int frameHeight)
+        {
+            // Drawing frameline lines
+            for (int i = 0; i < frameLine.polyPoints.Count; i++)
+            {
+                var line1ID = doc.Objects.AddLine(new Line(new Point3d(frameLine.polyPoints[i][0], frameLine.polyPoints[i][1] - frameHeight / 2, 0),
+                                                new Point3d(frameLine.polyPoints[i][0], frameLine.polyPoints[i][1] + frameHeight / 2, 0)));
+                var line2ID = doc.Objects.AddLine(new Line(new Point3d(frameLine.polyPoints[i][0], 0, frameLine.polyPoints[i][1] - frameHeight / 2),
+                                                new Point3d(frameLine.polyPoints[i][0], 0, frameLine.polyPoints[i][1] + frameHeight / 2)));
+                doc.Groups.AddToGroup(doc.Groups.FindName(groupName).Index, line1ID);
+                doc.Groups.AddToGroup(doc.Groups.FindName(groupName).Index, line2ID);
+            }
+        }
+
+        void AddLabels(Rhino.RhinoDoc doc, FrameLine frameLine, string groupName, int frameHeight)
+        {
+            int textHeight = 150; // Text height
+
+            // Adding labels
+            for (int i = 0; i < frameLine.polyPoints.Count; i++)
+            {
+                if (frameLine.ifLabelList[i])
+                {
+                    Text3d tkst = new Text3d("Fr " + frameLine.framesList[i].ToString());
+                    Text3d tkstRotated = new Text3d("Fr " + frameLine.framesList[i].ToString());
+
+                    tkst.Height = textHeight;
+                    tkstRotated.Height = textHeight;
+
+                    tkst.HorizontalAlignment = Rhino.DocObjects.TextHorizontalAlignment.Center;
+                    tkst.VerticalAlignment = Rhino.DocObjects.TextVerticalAlignment.Middle;
+
+                    tkstRotated.HorizontalAlignment = Rhino.DocObjects.TextHorizontalAlignment.Center;
+                    tkstRotated.VerticalAlignment = Rhino.DocObjects.TextVerticalAlignment.Middle;
+
+                    tkst.TextPlane = new Plane(new Point3d(frameLine.polyPoints[i][0], -frameHeight, 0), new Vector3d(0.0, 0.0, 1.0));
+                    Plane rotPlane = new Plane(new Point3d(frameLine.polyPoints[i][0], 0, -frameHeight), new Vector3d(0.0, 0.0, 1.0));
+                    rotPlane.Rotate(Math.PI / 2, new Vector3d(1.0, 0.0, 0.0));
+                    tkstRotated.TextPlane = rotPlane;
+
+                    var tkstID = doc.Objects.AddText(tkst);
+                    var tkstRotatedID = doc.Objects.AddText(tkstRotated);
+                    doc.Groups.AddToGroup(doc.Groups.FindName(groupName).Index, tkstID);
+                    doc.Groups.AddToGroup(doc.Groups.FindName(groupName).Index, tkstRotatedID);
+                }
+            }
         }
     }
 }
