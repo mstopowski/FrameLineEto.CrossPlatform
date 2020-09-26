@@ -116,17 +116,120 @@ namespace FrameLineEto.Common.Views
             #region Buttons
             var clear_button = new Button { Text = "Clear" };
             clear_button.Click += (sender, e) => ClearMainParam(main_texts);
-            var clear_mod_button = new Button { Text = "Clear mod" };
+            var clear_mod_button = new Button { Text = "Clear" };
             clear_mod_button.Click += (sender, e) => ClearModParam(mod1_texts, mod2_texts, mod3_texts);
 
-            var hello_button = new Button { Text = "Create" };
+            var hello_button = new Button { Text = "Create", Width = _width};
             hello_button.Click += (sender, e) => CreateFrameLine(main_texts, mod1_texts, mod2_texts, mod3_texts);
 
-            var close_button = new Button { Text = "Cancel" };
+            var close_button = new Button { Text = "Close", Width = _width };
             close_button.Click += (sender, e) => Close();
             #endregion
 
-            #region
+            #region GroupBox of main frame line
+            var main_groupBox = new GroupBox
+            {
+                Text = "Main parameters of frame line",
+                Content = new TableLayout
+                {
+                    Rows =
+                    {
+                        new TableRow
+                        {
+                            Cells =
+                            {
+                                new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
+                                new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
+                                new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
+                            }
+                        },
+                        new TableRow
+                        {
+                            Cells =
+                            {
+                                new TableCell(fromTextBox),
+                                new TableCell(toTextBox),
+                                new TableCell(spacingTextBox),
+                            },
+                        },
+
+                        null,
+                        new TableRow(null, null, clear_button),
+                        null,
+                    }
+                },
+            };
+            #endregion
+
+            #region GroupBox - modifications of frame line
+            var modification_groupBox = new GroupBox
+            {
+                Text = "Local modifications of frame line",
+                Content = new TableLayout
+                {
+                    Rows =
+                    {
+                        new TableRow
+                        {
+                            Cells =
+                            {
+                                new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
+                                new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
+                                new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
+                            }
+                        },
+                        new TableRow
+                        {
+                            Cells =
+                            {
+                                new TableCell(fromTextBox_1),
+                                new TableCell(toTextBox_1),
+                                new TableCell(spacingTextBox_1),
+                            },
+                        },
+                        new TableRow
+                        {
+                            Cells =
+                            {
+                                new TableCell(fromTextBox_2),
+                                new TableCell(toTextBox_2),
+                                new TableCell(spacingTextBox_2),
+                            },
+                        },
+                        new TableRow
+                        {
+                            Cells =
+                            {
+                                new TableCell(fromTextBox_3),
+                                new TableCell(toTextBox_3),
+                                new TableCell(spacingTextBox_3),
+                            },
+                        },
+                        null,
+                        new TableRow(null, null, clear_mod_button),
+                        null,
+                    }
+                },
+            };
+            #endregion
+
+            #region bottom buttons
+            var bottom_buttons_groupBox = new TableLayout
+            {
+                Rows =
+                {
+                    new TableRow
+                    {
+                        Cells =
+                        {
+                            new TableCell(hello_button, true),
+                            new TableCell(close_button, true),
+                        }
+                    }
+                }
+            };
+            #endregion
+
             var layout = new TableLayout
             {
                 Spacing = new Size(5, 5),
@@ -134,92 +237,13 @@ namespace FrameLineEto.Common.Views
                 
                 Rows =
                 {
-                    new TableRow
-                    {
-                        Cells =
-                        {
-                            new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
-                            new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
-                            new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
-                        }
-                    },
-
-                    new TableRow
-                    {
-                        Cells =
-                        {
-                            new TableCell(fromTextBox),
-                            new TableCell(toTextBox),
-                            new TableCell(spacingTextBox),
-                        },
-                    },
-
+                    main_groupBox,
                     null,
-
-                    new TableRow(null, null, clear_button),
-
+                    modification_groupBox,
                     null,
-
-                    new TableRow(new Label{ Text = "Modifications"}),
-
-                    new TableRow
-                    {
-                        Cells =
-                        {
-                            new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
-                            new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
-                            new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
-                        }
-                    },
-
-                    new TableRow
-                    {
-                        Cells =
-                        {
-                            new TableCell(fromTextBox_1),
-                            new TableCell(toTextBox_1),
-                            new TableCell(spacingTextBox_1),
-                        },
-                    },
-
-                    new TableRow
-                    {
-                        Cells =
-                        {
-                            new TableCell(fromTextBox_2),
-                            new TableCell(toTextBox_2),
-                            new TableCell(spacingTextBox_2),
-                        },
-                    },
-
-                    new TableRow
-                    {
-                        Cells =
-                        {
-                            new TableCell(fromTextBox_3),
-                            new TableCell(toTextBox_3),
-                            new TableCell(spacingTextBox_3),
-                        },
-                    },
-
-                    null,
-
-                    new TableRow(null, null, clear_mod_button),
-
-                    null,
-
-                    new TableRow
-                    {
-                        Cells =
-                        {
-                            null,
-                            new TableCell(hello_button),
-                            new TableCell(close_button),
-                        },
-                    }
+                    bottom_buttons_groupBox,
                 },
             };
-            #endregion
 
             Content = layout;
         }
