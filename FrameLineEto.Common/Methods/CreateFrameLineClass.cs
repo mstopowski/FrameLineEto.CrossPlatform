@@ -1,4 +1,5 @@
 ﻿using System;
+using Rhino;
 using Rhino.Collections;
 using Rhino.DocObjects;
 using Rhino.Geometry;
@@ -18,7 +19,7 @@ namespace FrameLineEto.Common.Methods
         public void AddFrameLineToDoc()
         {
             FrameLine frameLine = new FrameLine(spacings);
-
+            
             var doc = Rhino.RhinoDoc.ActiveDoc;
             var layerBackUp = doc.Layers.CurrentLayer;
 
@@ -62,6 +63,18 @@ namespace FrameLineEto.Common.Methods
             var polyID = doc.Objects.AddPolyline(frameLine.polyPoints);
             doc.Groups.AddToGroup(doc.Groups.FindName(groupName).Index, polyID);
 
+            // adding params to layer
+            try
+            {
+                doc.Layers.FindName(flineLayer.Name).UserData.Remove(doc.Layers.FindName(flineLayer.Name).UserData.Find(typeof(FrameLineData)));
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            
+            doc.Layers.FindName(flineLayer.Name).UserData.Add(new FrameLineData(spacings));
+
             // Redrawing views
             doc.Views.Redraw();
 
@@ -69,7 +82,10 @@ namespace FrameLineEto.Common.Methods
             doc.Layers.SetCurrentLayerIndex(layerBackUp.Index, true);
             doc.Layers.FindIndex(doc.Layers.FindName(labelLayer.Name).Index).IsLocked = true;
             doc.Layers.FindIndex(doc.Layers.FindName(flineLayer.Name).Index).IsLocked = true;
+
+            Rhino.RhinoApp.WriteLine("{0} {1}", doc.Layers.FindName(flineLayer.Name).UserData.Find(typeof(FrameLineData)).Description, doc.Layers.FindName(flineLayer.Name).UserData.Find(typeof(FrameLineData)));
         }
+
         void CreateCrossLines(Rhino.RhinoDoc doc, FrameLine frameLine, string groupName, int frameHeight)
         {
             // Drawing frameline lines

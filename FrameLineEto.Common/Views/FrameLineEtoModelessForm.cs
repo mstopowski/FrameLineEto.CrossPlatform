@@ -1,6 +1,7 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using System;
+using Rhino;
 using Rhino.Collections;
 using Rhino.DocObjects;
 using Rhino.Geometry;
@@ -23,111 +24,170 @@ namespace FrameLineEto.Common.Views
             ShowInTaskbar = true;
             Title = GetType().Name;
             WindowStyle = WindowStyle.Default;
-            var _width = 65;
-            RhinoList<TextBox> main_texts = new RhinoList<TextBox>();
-            RhinoList<TextBox> mod1_texts = new RhinoList<TextBox>();
-            RhinoList<TextBox> mod2_texts = new RhinoList<TextBox>();
-            RhinoList<TextBox> mod3_texts = new RhinoList<TextBox>();
+            var _Width = 65;
+            string fLayerName = "FRAME LINE";
+            
+            RhinoList<TextBox> main_TextBoxes = new RhinoList<TextBox>();
+            RhinoList<TextBox> mod1_TextBoxes = new RhinoList<TextBox>();
+            RhinoList<TextBox> mod2_TextBoxes = new RhinoList<TextBox>();
+            RhinoList<TextBox> mod3_TextBoxes = new RhinoList<TextBox>();
 
             #region Frame line
-            var fromTextBox = new TextBox
+            var main_from_TextBox = new TextBox
             {
                 ToolTip = "Type starting frame of frame line.",
-                Width = _width,
+                Width = _Width,
             };
-            main_texts.Add(fromTextBox);
-            var toTextBox = new TextBox
+            main_TextBoxes.Add(main_from_TextBox);
+
+            var main_to_TextBox = new TextBox
             {
                 ToolTip = "Type end frame of frame line.",
-                Width = _width,
+                Width = _Width,
             };
-            main_texts.Add(toTextBox);
-            var spacingTextBox = new TextBox
+            main_TextBoxes.Add(main_to_TextBox);
+
+            var main_spacing_TextBox = new TextBox
             {
                 ToolTip = "Type typical spacing of frame line.",
-                Width = _width,
+                Width = _Width,
             };
-            main_texts.Add(spacingTextBox);
+            main_TextBoxes.Add(main_spacing_TextBox);
             #endregion
 
             #region Frame line modification #1
-            var fromTextBox_1 = new TextBox
+            var mod1_from_TextBox = new TextBox
             {
                 ToolTip = "Type starting frame of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod1_texts.Add(fromTextBox_1);
-            var toTextBox_1 = new TextBox
+            mod1_TextBoxes.Add(mod1_from_TextBox);
+
+            var mod1_to_TextBox = new TextBox
             {
                 ToolTip = "Type end frame of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod1_texts.Add(toTextBox_1);
-            var spacingTextBox_1 = new TextBox
+            mod1_TextBoxes.Add(mod1_to_TextBox);
+
+            var mod1_spacing_TextBox = new TextBox
             {
                 ToolTip = "Type spacing of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod1_texts.Add(spacingTextBox_1);
+            mod1_TextBoxes.Add(mod1_spacing_TextBox);
             #endregion
 
             #region Frame line modification #2
-            var fromTextBox_2 = new TextBox
+            var mod2_from_TextBox = new TextBox
             {
                 ToolTip = "Type starting frame of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod2_texts.Add(fromTextBox_2);
-            var toTextBox_2 = new TextBox
+            mod2_TextBoxes.Add(mod2_from_TextBox);
+
+            var mod2_to_TextBox = new TextBox
             {
                 ToolTip = "Type end frame of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod2_texts.Add(toTextBox_2);
-            var spacingTextBox_2 = new TextBox
+            mod2_TextBoxes.Add(mod2_to_TextBox);
+
+            var mod2_spacing_TextBox = new TextBox
             {
                 ToolTip = "Type spacing of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod2_texts.Add(spacingTextBox_2);
+            mod2_TextBoxes.Add(mod2_spacing_TextBox);
             #endregion
 
             #region Frame line modification #3
-            var fromTextBox_3 = new TextBox
+            var mod3_from_TextBox = new TextBox
             {
                 ToolTip = "Type starting frame of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod3_texts.Add(fromTextBox_2);
-            var toTextBox_3 = new TextBox
+            mod3_TextBoxes.Add(mod2_from_TextBox);
+
+            var mod3_to_TextBox = new TextBox
             {
                 ToolTip = "Type end frame of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod3_texts.Add(toTextBox_2);
+            mod3_TextBoxes.Add(mod2_to_TextBox);
+
             var spacingTextBox_3 = new TextBox
             {
                 ToolTip = "Type spacing of modification.",
-                Width = _width,
+                Width = _Width,
             };
-            mod3_texts.Add(spacingTextBox_3);
+            mod3_TextBoxes.Add(spacingTextBox_3);
             #endregion
 
             #region Buttons
-            var clear_button = new Button { Text = "Clear" };
-            clear_button.Click += (sender, e) => ClearMainParam(main_texts);
-            var clear_mod_button = new Button { Text = "Clear" };
-            clear_mod_button.Click += (sender, e) => ClearModParam(mod1_texts, mod2_texts, mod3_texts);
+            var clear_main_Button = new Button { Text = "Clear" };
+            clear_main_Button.Click += (sender, e) => ClearMainParam(main_TextBoxes);
 
-            var hello_button = new Button { Text = "Create", Width = _width};
-            hello_button.Click += (sender, e) => CreateFrameLine(main_texts, mod1_texts, mod2_texts, mod3_texts);
+            var clear_modification_Button = new Button { Text = "Clear" };
+            clear_modification_Button.Click += (sender, e) => ClearModParam(mod1_TextBoxes, mod2_TextBoxes, mod3_TextBoxes);
 
-            var close_button = new Button { Text = "Close", Width = _width };
+            var create_fLine_Button = new Button { Text = "Create", Width = _Width};
+            create_fLine_Button.Click += (sender, e) => CreateFrameLine(main_TextBoxes, mod1_TextBoxes, mod2_TextBoxes, mod3_TextBoxes);
+
+            var close_button = new Button { Text = "Close", Width = _Width };
             close_button.Click += (sender, e) => Close();
             #endregion
 
+            #region Read user data from Layer
+            if (RhinoDoc.ActiveDoc.Layers.FindName(fLayerName) != null)
+            {
+                try
+                {
+                    var userData = RhinoDoc.ActiveDoc.Layers.FindName(fLayerName).UserData.Find(typeof(FrameLineData)) as FrameLineData;
+                    if (userData == null)
+                    {
+                        RhinoApp.WriteLine("userData is null");
+                    }
+                    else
+                    {
+                        create_fLine_Button.Text = "Update";
+
+                        main_from_TextBox.Text = userData.Main_From.ToString();
+                        main_to_TextBox.Text = userData.Main_To.ToString();
+                        main_spacing_TextBox.Text = userData.Main_Spacing.ToString();
+
+                        if (userData.Mod1_Spacing > 0)
+                        {
+                            mod1_from_TextBox.Text = userData.Mod1_From.ToString();
+                            mod1_to_TextBox.Text = userData.Mod1_To.ToString();
+                            mod1_spacing_TextBox.Text = userData.Mod1_Spacing.ToString();
+
+                            if (userData.Mod2_Spacing > 0)
+                            {
+                                mod2_from_TextBox.Text = userData.Mod2_From.ToString();
+                                mod2_to_TextBox.Text = userData.Mod2_To.ToString();
+                                mod2_spacing_TextBox.Text = userData.Mod2_Spacing.ToString();
+
+                                if (userData.Mod3_Spacing > 0)
+                                {
+                                    mod3_from_TextBox.Text = userData.Mod3_From.ToString();
+                                    mod3_to_TextBox.Text = userData.Mod3_To.ToString();
+                                    spacingTextBox_3.Text = userData.Mod3_Spacing.ToString();
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+
+            }
+            #endregion
+
             #region GroupBox of main frame line
-            var main_groupBox = new GroupBox
+            var main_line_GroupBox = new GroupBox
             {
                 Text = "Main parameters of frame line",
                 Content = new TableLayout
@@ -138,23 +198,23 @@ namespace FrameLineEto.Common.Views
                         {
                             Cells =
                             {
-                                new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
-                                new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
-                                new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
+                                new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _Width},
+                                new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _Width},
+                                new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _Width},
                             }
                         },
                         new TableRow
                         {
                             Cells =
                             {
-                                new TableCell(fromTextBox),
-                                new TableCell(toTextBox),
-                                new TableCell(spacingTextBox),
+                                new TableCell(main_from_TextBox),
+                                new TableCell(main_to_TextBox),
+                                new TableCell(main_spacing_TextBox),
                             },
                         },
 
                         null,
-                        new TableRow(null, null, clear_button),
+                        new TableRow(null, null, clear_main_Button),
                         null,
                     }
                 },
@@ -162,7 +222,7 @@ namespace FrameLineEto.Common.Views
             #endregion
 
             #region GroupBox - modifications of frame line
-            var modification_groupBox = new GroupBox
+            var modification_GroupBox = new GroupBox
             {
                 Text = "Local modifications of frame line",
                 Content = new TableLayout
@@ -173,40 +233,40 @@ namespace FrameLineEto.Common.Views
                         {
                             Cells =
                             {
-                                new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _width},
-                                new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _width},
-                                new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _width},
+                                new Label{Text = "From", TextAlignment = TextAlignment.Left, Width = _Width},
+                                new Label{Text = "To", TextAlignment = TextAlignment.Left, Width = _Width},
+                                new Label{Text = "Spacing", TextAlignment = TextAlignment.Left, Width = _Width},
                             }
                         },
                         new TableRow
                         {
                             Cells =
                             {
-                                new TableCell(fromTextBox_1),
-                                new TableCell(toTextBox_1),
-                                new TableCell(spacingTextBox_1),
+                                new TableCell(mod1_from_TextBox),
+                                new TableCell(mod1_to_TextBox),
+                                new TableCell(mod1_spacing_TextBox),
                             },
                         },
                         new TableRow
                         {
                             Cells =
                             {
-                                new TableCell(fromTextBox_2),
-                                new TableCell(toTextBox_2),
-                                new TableCell(spacingTextBox_2),
+                                new TableCell(mod2_from_TextBox),
+                                new TableCell(mod2_to_TextBox),
+                                new TableCell(mod2_spacing_TextBox),
                             },
                         },
                         new TableRow
                         {
                             Cells =
                             {
-                                new TableCell(fromTextBox_3),
-                                new TableCell(toTextBox_3),
+                                new TableCell(mod3_from_TextBox),
+                                new TableCell(mod3_to_TextBox),
                                 new TableCell(spacingTextBox_3),
                             },
                         },
                         null,
-                        new TableRow(null, null, clear_mod_button),
+                        new TableRow(null, null, clear_modification_Button),
                         null,
                     }
                 },
@@ -222,7 +282,7 @@ namespace FrameLineEto.Common.Views
                     {
                         Cells =
                         {
-                            new TableCell(hello_button, true),
+                            new TableCell(create_fLine_Button, true),
                             new TableCell(close_button, true),
                         }
                     }
@@ -237,9 +297,9 @@ namespace FrameLineEto.Common.Views
                 
                 Rows =
                 {
-                    main_groupBox,
+                    main_line_GroupBox,
                     null,
-                    modification_groupBox,
+                    modification_GroupBox,
                     null,
                     bottom_buttons_groupBox,
                 },
@@ -248,18 +308,18 @@ namespace FrameLineEto.Common.Views
             Content = layout;
         }
 
-        public void CreateFrameLine(RhinoList<TextBox> texts, RhinoList<TextBox> texts_mod1, RhinoList<TextBox> texts_mod2, RhinoList<TextBox> texts_mod3)
+        public void CreateFrameLine(RhinoList<TextBox> text_List, RhinoList<TextBox> mod1_List, RhinoList<TextBox> mod2_List, RhinoList<TextBox> mod3_List)
         {
             RhinoList<Spacing> spacings = new RhinoList<Spacing>();
-            if (!CheckList(texts))
+            if (!CheckList(text_List))
             {
                 return;
             }
 
-            GetParams(texts, ref spacings);
-            if (CheckList(texts_mod1)) GetParams(texts_mod1, ref spacings);
-            if (CheckList(texts_mod2)) GetParams(texts_mod2, ref spacings);
-            if (CheckList(texts_mod3)) GetParams(texts_mod3, ref spacings);
+            GetParams(text_List, ref spacings);
+            if (CheckList(mod1_List)) GetParams(mod1_List, ref spacings);
+            if (CheckList(mod2_List)) GetParams(mod2_List, ref spacings);
+            if (CheckList(mod3_List)) GetParams(mod3_List, ref spacings);
 
             CreateFrameLineClass createFrameLine = new CreateFrameLineClass(spacings);
             createFrameLine.AddFrameLineToDoc();
@@ -267,22 +327,22 @@ namespace FrameLineEto.Common.Views
             return;
         }
 
-        void GetParams(RhinoList<TextBox> texts, ref RhinoList<Spacing> spacingList)
+        void GetParams(RhinoList<TextBox> text_List, ref RhinoList<Spacing> spacingList)
         {
-            Spacing spacing = new Spacing(int.Parse(texts[0].Text),int.Parse(texts[1].Text),int.Parse(texts[2].Text));
+            Spacing spacing = new Spacing(int.Parse(text_List[0].Text),int.Parse(text_List[1].Text),int.Parse(text_List[2].Text));
             spacingList.Add(spacing);
         }
 
-        void ClearMainParam(RhinoList<TextBox> texts)
+        void ClearMainParam(RhinoList<TextBox> text_List)
         {
-            ClearTextBoxes(texts);
+            ClearTextBoxes(text_List);
         }
 
-        void ClearModParam(RhinoList<TextBox> texts1, RhinoList<TextBox> texts2, RhinoList<TextBox> texts3)
+        void ClearModParam(RhinoList<TextBox> text1_List, RhinoList<TextBox> text2_List, RhinoList<TextBox> text3_List)
         {
-            ClearTextBoxes(texts1);
-            ClearTextBoxes(texts2);
-            ClearTextBoxes(texts3);
+            ClearTextBoxes(text1_List);
+            ClearTextBoxes(text2_List);
+            ClearTextBoxes(text3_List);
         }
 
         void ClearTextBoxes(RhinoList<TextBox> textBoxes)
@@ -293,9 +353,9 @@ namespace FrameLineEto.Common.Views
             }
         }
 
-        bool CheckList(RhinoList<TextBox> texts)
+        bool CheckList(RhinoList<TextBox> text_List)
         {
-            foreach (var text in texts)
+            foreach (var text in text_List)
             {
                 if(text.Text == "")
                 {

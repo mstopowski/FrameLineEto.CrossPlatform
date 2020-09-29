@@ -7,8 +7,8 @@ namespace FrameLineEto.Common.Commands
     public class FrameLineEtoCommonCommand : Command
     {
         private Views.FrameLineEtoModelessForm Form { get; set; }
-
-        public override string EnglishName => "FrameLineEto";
+        
+        public override string EnglishName => "FrameLineWindowMode";
 
         protected override Result RunCommand(Rhino.RhinoDoc doc, RunMode mode)
         {
