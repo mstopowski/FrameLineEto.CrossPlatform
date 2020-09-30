@@ -70,7 +70,7 @@ namespace FrameLineEto.Common.Methods
             }
             catch (Exception ex)
             {
-                
+                //RhinoApp.WriteLine(ex.ToString());
             }
             
             doc.Layers.FindName(flineLayer.Name).UserData.Add(new FrameLineData(spacings));
