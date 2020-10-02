@@ -3,13 +3,7 @@ using Eto.Forms;
 using System;
 using Rhino;
 using Rhino.Collections;
-using Rhino.DocObjects;
-using Rhino.Geometry;
-using Rhino.Display;
 using FrameLineEto.Common.Methods;
-using FrameLineEto.Common.Commands;
-using System.Data;
-using System.Linq;
 
 namespace FrameLineEto.Common.Views
 {
@@ -22,7 +16,7 @@ namespace FrameLineEto.Common.Views
             Padding = new Padding(5);
             Resizable = false;
             ShowInTaskbar = true;
-            Title = GetType().Name;
+            Title = "Frame line creator";
             WindowStyle = WindowStyle.Default;
             var _Width = 65;
             string fLayerName = "FRAME LINE";
@@ -311,15 +305,12 @@ namespace FrameLineEto.Common.Views
         public void CreateFrameLine(RhinoList<TextBox> text_List, RhinoList<TextBox> mod1_List, RhinoList<TextBox> mod2_List, RhinoList<TextBox> mod3_List)
         {
             RhinoList<Spacing> spacings = new RhinoList<Spacing>();
-            if (!CheckList(text_List))
-            {
-                return;
-            }
-
+            if (!CheckMainList(text_List)) return;
             GetParams(text_List, ref spacings);
-            if (CheckList(mod1_List)) GetParams(mod1_List, ref spacings);
-            if (CheckList(mod2_List)) GetParams(mod2_List, ref spacings);
-            if (CheckList(mod3_List)) GetParams(mod3_List, ref spacings);
+
+            if (CheckModList(mod1_List, text_List)) GetParams(mod1_List, ref spacings);
+            if (CheckModList(mod2_List, text_List)) GetParams(mod2_List, ref spacings);
+            if (CheckModList(mod3_List, text_List)) GetParams(mod3_List, ref spacings);
 
             CreateFrameLineClass createFrameLine = new CreateFrameLineClass(spacings);
             createFrameLine.AddFrameLineToDoc();
@@ -327,25 +318,22 @@ namespace FrameLineEto.Common.Views
             return;
         }
 
-        void GetParams(RhinoList<TextBox> text_List, ref RhinoList<Spacing> spacingList)
+        private void GetParams(RhinoList<TextBox> text_List, ref RhinoList<Spacing> spacingList)
         {
             Spacing spacing = new Spacing(int.Parse(text_List[0].Text),int.Parse(text_List[1].Text),int.Parse(text_List[2].Text));
             spacingList.Add(spacing);
         }
 
-        void ClearMainParam(RhinoList<TextBox> text_List)
-        {
-            ClearTextBoxes(text_List);
-        }
+        void ClearMainParam(RhinoList<TextBox> text_List) => ClearTextBoxes(text_List);
 
-        void ClearModParam(RhinoList<TextBox> text1_List, RhinoList<TextBox> text2_List, RhinoList<TextBox> text3_List)
+        private void ClearModParam(RhinoList<TextBox> text1_List, RhinoList<TextBox> text2_List, RhinoList<TextBox> text3_List)
         {
             ClearTextBoxes(text1_List);
             ClearTextBoxes(text2_List);
             ClearTextBoxes(text3_List);
         }
 
-        void ClearTextBoxes(RhinoList<TextBox> textBoxes)
+        private void ClearTextBoxes(RhinoList<TextBox> textBoxes)
         {
             foreach (var textbox in textBoxes)
             {
@@ -353,14 +341,63 @@ namespace FrameLineEto.Common.Views
             }
         }
 
-        bool CheckList(RhinoList<TextBox> text_List)
+        private bool CheckMainList(RhinoList<TextBox> text_List)
         {
             foreach (var text in text_List)
             {
-                if(text.Text == "")
+                if (text.Text == "")
+                {
+                    MessageBox.Show("Main parameters cannot be empty", "Main frame line parameters", MessageBoxType.Error);
+                    return false;
+                }
+            }
+            if (int.Parse(text_List[0].Text) > 0)
+            {
+                MessageBox.Show("Starting frame number cannot be greater than zero", "Main frame line parameters", MessageBoxType.Error);
+                text_List[0].Focus();
+                return false;
+            }
+            if (int.Parse(text_List[1].Text) < 0)
+            {
+                MessageBox.Show("End frame number cannot be less than zero", "Main frame line parameters", MessageBoxType.Error);
+                text_List[1].Focus();
+                return false;
+            }
+            if (int.Parse(text_List[2].Text) <= 0)
+            {
+                MessageBox.Show("Spacing should be greater than zero", "Main frame line parameters", MessageBoxType.Error);
+                text_List[2].Focus();
+                return false;
+            }
+            return true;
+        }
+
+        bool CheckModList(RhinoList<TextBox> text_List, RhinoList<TextBox> main_List)
+        {
+            foreach (var text in text_List)
+            {
+                if (text.Text == "")
                 {
                     return false;
                 }
+            }
+            if (int.Parse(text_List[0].Text) < int.Parse(main_List[0].Text))
+            {
+                MessageBox.Show("Starting modification frame number cannot be less than main starting frame", "Frame line modification parameters", MessageBoxType.Error);
+                text_List[0].Focus();
+                return false;
+            }
+            if (int.Parse(text_List[1].Text) > int.Parse(main_List[1].Text))
+            {
+                MessageBox.Show("End modification frame number cannot be greater than ending main frame", "Frame line modification parameters", MessageBoxType.Error);
+                text_List[1].Focus();
+                return false;
+            }
+            if (int.Parse(text_List[2].Text) <= 0)
+            {
+                MessageBox.Show("Spacing should be greater than zero", "Frame line modification parameters", MessageBoxType.Error);
+                text_List[2].Focus();
+                return false;
             }
             return true;
         }

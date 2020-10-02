@@ -51,7 +51,7 @@ namespace FrameLineEto.Common.Methods
             }
 
             int frameHeight = 400; // Vertical lines height
-
+            
             CreateCrossLines(doc, frameLine, groupName, frameHeight);
 
             doc.Layers.SetCurrentLayerIndex(doc.Layers.FindName(labelLayer.Name).Index, true);
