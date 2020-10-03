@@ -20,8 +20,7 @@ namespace FrameLineEto.Common.Views
             WindowStyle = WindowStyle.Default;
             var _Width = 65;
             string fLayerName = "FRAME LINE";
-
-            // Lists storing text boxes for parameters of main line and its modification
+            
             RhinoList<TextBox> main_TextBoxes = new RhinoList<TextBox>();
             RhinoList<TextBox> mod1_TextBoxes = new RhinoList<TextBox>();
             RhinoList<TextBox> mod2_TextBoxes = new RhinoList<TextBox>();
@@ -102,21 +101,21 @@ namespace FrameLineEto.Common.Views
                 ToolTip = "Type starting frame of modification.",
                 Width = _Width,
             };
-            mod3_TextBoxes.Add(mod3_from_TextBox);
+            mod3_TextBoxes.Add(mod2_from_TextBox);
 
             var mod3_to_TextBox = new TextBox
             {
                 ToolTip = "Type end frame of modification.",
                 Width = _Width,
             };
-            mod3_TextBoxes.Add(mod3_to_TextBox);
+            mod3_TextBoxes.Add(mod2_to_TextBox);
 
-            var mod3_spacing_TextBox = new TextBox
+            var spacingTextBox_3 = new TextBox
             {
                 ToolTip = "Type spacing of modification.",
                 Width = _Width,
             };
-            mod3_TextBoxes.Add(mod3_spacing_TextBox);
+            mod3_TextBoxes.Add(spacingTextBox_3);
             #endregion
 
             #region Buttons
@@ -134,7 +133,6 @@ namespace FrameLineEto.Common.Views
             #endregion
 
             #region Read user data from Layer
-            // Setting text boxes texts for values from user data stored in FRAME LINE layer
             if (RhinoDoc.ActiveDoc.Layers.FindName(fLayerName) != null)
             {
                 try
@@ -146,27 +144,29 @@ namespace FrameLineEto.Common.Views
                     }
                     else
                     {
-                        main_from_TextBox.Text = userData.Main_Params[0].ToString();
-                        main_to_TextBox.Text = userData.Main_Params[1].ToString();
-                        main_spacing_TextBox.Text = userData.Main_Params[2].ToString();
+                        create_fLine_Button.Text = "Update";
 
-                        if (userData.Mod1_Params[2] > 0)
+                        main_from_TextBox.Text = userData.Main_From.ToString();
+                        main_to_TextBox.Text = userData.Main_To.ToString();
+                        main_spacing_TextBox.Text = userData.Main_Spacing.ToString();
+
+                        if (userData.Mod1_Spacing > 0)
                         {
-                            mod1_from_TextBox.Text = userData.Mod1_Params[0].ToString();
-                            mod1_to_TextBox.Text = userData.Mod1_Params[1].ToString();
-                            mod1_spacing_TextBox.Text = userData.Mod1_Params[2].ToString();
+                            mod1_from_TextBox.Text = userData.Mod1_From.ToString();
+                            mod1_to_TextBox.Text = userData.Mod1_To.ToString();
+                            mod1_spacing_TextBox.Text = userData.Mod1_Spacing.ToString();
 
-                            if (userData.Mod2_Params[2] > 0)
+                            if (userData.Mod2_Spacing > 0)
                             {
-                                mod2_from_TextBox.Text = userData.Mod2_Params[0].ToString();
-                                mod2_to_TextBox.Text = userData.Mod2_Params[1].ToString();
-                                mod2_spacing_TextBox.Text = userData.Mod2_Params[2].ToString();
+                                mod2_from_TextBox.Text = userData.Mod2_From.ToString();
+                                mod2_to_TextBox.Text = userData.Mod2_To.ToString();
+                                mod2_spacing_TextBox.Text = userData.Mod2_Spacing.ToString();
 
-                                if (userData.Mod3_Params[2] > 0)
+                                if (userData.Mod3_Spacing > 0)
                                 {
-                                    mod3_from_TextBox.Text = userData.Mod3_Params[0].ToString();
-                                    mod3_to_TextBox.Text = userData.Mod3_Params[1].ToString();
-                                    mod3_spacing_TextBox.Text = userData.Mod3_Params[2].ToString();
+                                    mod3_from_TextBox.Text = userData.Mod3_From.ToString();
+                                    mod3_to_TextBox.Text = userData.Mod3_To.ToString();
+                                    spacingTextBox_3.Text = userData.Mod3_Spacing.ToString();
                                 }
                             }
                         }
@@ -174,7 +174,7 @@ namespace FrameLineEto.Common.Views
                 }
                 catch (Exception ex)
                 {
-                    RhinoApp.WriteLine(ex.ToString());
+                    
                 }
 
             }
@@ -256,7 +256,7 @@ namespace FrameLineEto.Common.Views
                             {
                                 new TableCell(mod3_from_TextBox),
                                 new TableCell(mod3_to_TextBox),
-                                new TableCell(mod3_spacing_TextBox),
+                                new TableCell(spacingTextBox_3),
                             },
                         },
                         null,
