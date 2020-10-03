@@ -8,9 +8,9 @@
         
         public Spacing(int start, int end, int space)
         {
-            this.Start = start;
-            this.End = end;
-            this.Space = space;
+            Start = start;
+            End = end;
+            Space = space;
         }
     }
 }
