@@ -12,47 +12,27 @@ namespace FrameLineEto.Common.Methods
     public class FrameLineData : UserData
     {
         public RhinoList<Spacing> Spacings = new RhinoList<Spacing>();
-
-        public int Main_From { get; set; }
-        public int Main_To { get; set; }
-        public int Main_Spacing { get; set; }
-
-        public int Mod1_From { get; set; }
-        public int Mod1_To { get; set; }
-        public int Mod1_Spacing { get; set; }
-
-        public int Mod2_From { get; set; }
-        public int Mod2_To { get; set; }
-        public int Mod2_Spacing { get; set; }
-
-        public int Mod3_From { get; set; }
-        public int Mod3_To { get; set; }
-        public int Mod3_Spacing { get; set; }
+        public Int32[] Main_Params { get; set; }
+        public Int32[] Mod1_Params { get; set; }
+        public Int32[] Mod2_Params { get; set; }
+        public Int32[] Mod3_Params { get; set; }
 
         public FrameLineData() {}
         public FrameLineData(RhinoList<Spacing> spacings)
         {
-            Main_From = spacings[0].Start;
-            Main_To = spacings[0].End;
-            Main_Spacing = spacings[0].Space;
+            Main_Params = new Int32[] { spacings[0].Start, spacings[0].End, spacings[0].Space };
 
             if (spacings.Count > 1)
             {
-                Mod1_From = spacings[1].Start;
-                Mod1_To = spacings[1].End;
-                Mod1_Spacing = spacings[1].Space;
+                Mod1_Params = new Int32[] { spacings[1].Start, spacings[1].End, spacings[1].Space };
 
                 if (spacings.Count > 2)
                 {
-                    Mod2_From = spacings[2].Start;
-                    Mod2_To = spacings[2].End;
-                    Mod2_Spacing = spacings[2].Space;
+                    Mod2_Params = new Int32[] { spacings[2].Start, spacings[2].End, spacings[2].Space };
 
                     if (spacings.Count > 3)
                     {
-                        Mod3_From = spacings[3].Start;
-                        Mod3_To = spacings[3].End;
-                        Mod3_Spacing = spacings[3].Space;
+                        Mod3_Params = new Int32[] { spacings[3].Start, spacings[3].End, spacings[3].Space };
                     }
                 }
             }
@@ -67,21 +47,10 @@ namespace FrameLineEto.Common.Methods
         {
             if (source is FrameLineData src)
             {
-                Main_From = src.Main_From;
-                Main_To = src.Main_To;
-                Main_Spacing = src.Main_Spacing;
-
-                Mod1_From = src.Mod1_From;
-                Mod1_To = src.Mod1_To;
-                Mod1_Spacing = src.Mod1_Spacing;
-
-                Mod2_From = src.Mod2_From;
-                Mod2_To = src.Mod2_To;
-                Mod2_Spacing = src.Mod2_Spacing;
-
-                Mod3_From = src.Mod3_From;
-                Mod3_To = src.Mod3_To;
-                Mod3_Spacing = src.Mod3_Spacing;
+                Main_Params = src.Main_Params;
+                Mod1_Params = src.Mod1_Params;
+                Mod2_Params = src.Mod2_Params;
+                Mod3_Params = src.Mod3_Params;
             }
         }
 
@@ -89,7 +58,7 @@ namespace FrameLineEto.Common.Methods
         {
             get
             {
-                if (Main_Spacing > 0)
+                if (Main_Params[2] > 0)
                 {
                     return true;
                 }
@@ -100,47 +69,23 @@ namespace FrameLineEto.Common.Methods
         protected override bool Read(BinaryArchiveReader archive)
         {
             ArchivableDictionary dict = archive.ReadDictionary();
-            if (dict.ContainsKey("Main_From"))
+            if (dict.ContainsKey("Main_Params"))
             {
                 RhinoApp.WriteLine("Reading in progress...");
-
-                Main_From = (int)dict["Main_From"];
-                Main_To = (int)dict["Main_To"];
-                Main_Spacing = (int)dict["Main_Spacing"];
-
-                Mod1_From = (int)dict["Mod1_From"];
-                Mod1_To = (int)dict["Mod1_To"];
-                Mod1_Spacing = (int)dict["Mod1_Spacing"];
-
-                Mod2_From = (int)dict["Mod2_From"];
-                Mod2_To = (int)dict["Mod2_To"];
-                Mod2_Spacing = (int)dict["Mod2_Spacing"];
-
-                Mod3_From = (int)dict["Mod3_From"];
-                Mod3_To = (int)dict["Mod3_To"];
-                Mod3_Spacing = (int)dict["Mod3_Spacing"];
+                Main_Params = (Int32[])dict["Main_Params"];
+                Mod1_Params = (Int32[])dict["Mod1_Params"];
+                Mod2_Params = (Int32[])dict["Mod2_Params"];
+                Mod3_Params = (Int32[])dict["Mod3_Params"];
             }
             return true;
         }
         protected override bool Write(BinaryArchiveWriter archive)
         {
             var dict = new ArchivableDictionary(1, "Parameters");
-
-            dict.Set("Main_From", Main_From);
-            dict.Set("Main_To", Main_To);
-            dict.Set("Main_Spacing", Main_Spacing);
-
-            dict.Set("Mod1_From", Mod1_From);
-            dict.Set("Mod1_To", Mod1_To);
-            dict.Set("Mod1_Spacing", Mod1_Spacing);
-
-            dict.Set("Mod2_From", Mod2_From);
-            dict.Set("Mod2_To", Mod2_To);
-            dict.Set("Mod2_Spacing", Mod2_Spacing);
-
-            dict.Set("Mod3_From", Mod3_From);
-            dict.Set("Mod3_To", Mod3_To);
-            dict.Set("Mod3_Spacing", Mod3_Spacing);
+            dict.Set("Main_Params", Main_Params);
+            dict.Set("Mod1_Params", Mod1_Params);
+            dict.Set("Mod2_Params", Mod2_Params);
+            dict.Set("Mod3_Params", Mod3_Params);
 
             archive.WriteDictionary(dict);
             return true;
